@@ -1,6 +1,7 @@
 # About this Repo
 
-This is the Git repo of the Docker image for MODX.
+This is the Git repo of the Docker image for MODX. Forked from https://github.com/modxcms/docker-modx
+Updated php, some site specific tweaks, like maximum file sizes, tzones
 
 ## How to use this image
 

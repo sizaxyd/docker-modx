@@ -1,12 +1,24 @@
-FROM php:7.1-apache
+FROM php:8.2.8-apache
 
 MAINTAINER Vadim Homchik <homchik@gmail.com> (@vh)
+
+COPY ./php_size.ini "$PHP_INI_DIR/conf.d/"
 
 RUN a2enmod rewrite
 
 # install the PHP extensions we need
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev unzip sudo && rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	libpng-dev \
+	libfreetype6-dev \
+	libjpeg62-turbo-dev \
+    libwebp-dev \
+	unzip \
+	sudo \
+	#&& rm -rf /var/lib/apt/lists/* \
+	&& docker-php-ext-configure gd --enable-gd \
+		--with-freetype \
+		--with-jpeg \
+		--with-webp \
 	&& docker-php-ext-install gd opcache mysqli pdo pdo_mysql
 
 # set recommended PHP.ini settings
@@ -26,8 +38,8 @@ RUN { \
 
 VOLUME /var/www/html
 
-ENV MODX_VERSION 2.7.0
-ENV MODX_SHA1 79f7399b6cb2a7508852f2e82821a0d5670ef41f
+ENV MODX_VERSION 3.0.3
+ENV MODX_SHA1 835266a3279c9afa89905d21004da3a39a9ce193
 
 # upstream tarballs include ./modx-${MODX_VERSION}/
 RUN curl -o modx.zip -SL http://modx.com/download/direct/modx-${MODX_VERSION}-pl.zip \
